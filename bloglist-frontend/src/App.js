@@ -1,26 +1,26 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef  } from 'react'
 import Blog from './components/Blog'
 import CreateBlog from './components/CreateBlog'
 import LoguinForm from './components/LoginForm'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
+
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
+  const [refreshKey, setRefreshKey] = useState(true) 
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
     )
-  }, [])
+  }, [refreshKey])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -78,33 +78,14 @@ const App = () => {
     setUser(null)
   }
 
-  const handleTitle = (event) => {
-    setTitle(event.target.value)
-  }
+  
 
-  const handleAuthor = (event) => {
-    setAuthor(event.target.value)
-  }
-
-  const handleUrl = (event) => {
-    setUrl(event.target.value)
-  }
-
-  const handleCreateBlog = async (event) => {
-    event.preventDefault()
-    const blogObject = {
-      title: title,
-      author: author,
-      url: url,
-      likes: 0
-    }
-
+  const handleCreateBlog = async (blogObject) => {
+    
     try {
       const newBlog = await blogService.create(blogObject)
       setBlogs(blogs.concat(newBlog))
-      setTitle('')
-      setAuthor('')
-      setUrl('')
+      blogFormRef.current.toggleVisibility()
       setErrorMessage(
         `${newBlog.title} added`
       )
@@ -124,6 +105,8 @@ const App = () => {
 
   }
 
+  const blogFormRef = useRef()
+
   if (user === null) {
     return (
       <div>
@@ -133,18 +116,26 @@ const App = () => {
       </div>
     )
   }
-
+  console.log(1)
   return (
     <div>
       <h2>blogs</h2>
       <Notification message={errorMessage} />
       <h4>{user.name} loged in</h4>
       <button onClick={handleLogout}>LogOut</button>
+      <Togglable buttonLabel='create new' ref={blogFormRef}>
+        <CreateBlog handleCreateBlog={handleCreateBlog} />
+      </Togglable>
+      
 
-      <CreateBlog handleCreateBlog={handleCreateBlog} title={title} handleTitle={handleTitle} author={author} handleAuthor={handleAuthor} url={url} handleUrl={handleUrl} />
-
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+      {blogs
+        .sort((a, b) => b.likes - a.likes)
+        .map(blog =>
+          <Blog key={blog.id} blog={blog} 
+          setErrorMessage={setErrorMessage} 
+          setRefreshKey={setRefreshKey}
+          refreshKey={refreshKey}
+          user={user} />
       )}
     </div>
   )

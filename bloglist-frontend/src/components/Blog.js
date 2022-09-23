@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
+import InfoBlog from './InfoBlog'
 
 const Blog = ({ blog, setErrorMessage, setRefreshKey, refreshKey, user }) => {
 
@@ -19,7 +20,6 @@ const Blog = ({ blog, setErrorMessage, setRefreshKey, refreshKey, user }) => {
       author: blog.author,
       url: blog.url,
       likes: blog.likes + 1
-
     }
 
     try {
@@ -70,35 +70,20 @@ const Blog = ({ blog, setErrorMessage, setRefreshKey, refreshKey, user }) => {
 
   if (!showInfo) {
     return (
-      <div style={blogStyle}>
-        {blog.title} - {blog.author} <button onClick={() => setShowInfo(!showInfo)}>show</button>
+      <div style={blogStyle} className='blog'>
+        <p>{blog.title}</p><p>{blog.author}</p><button onClick={() => setShowInfo(!showInfo)}>show</button>
       </div>
 
     )
 
   }
-  if (user.username === blog.user.username) {
-    return (
-      <div style={blogStyle}>
-        <p>{blog.title} <button onClick={() => setShowInfo(!showInfo)}>hide</button></p>
-        <p>{blog.url}</p>
-        <p>likes {blog.likes} <button onClick={handleLike}>like</button></p>
-        <p>{blog.author}</p>
-        <button onClick={handleDelete}>Delete</button>
-
-      </div>
-    )
-  }
-
   return (
-    <div style={blogStyle}>
-      <p>{blog.title} <button onClick={() => setShowInfo(!showInfo)}>hide</button></p>
-      <p>{blog.url}</p>
-      <p>likes {blog.likes} <button onClick={handleLike}>like</button></p>
-      <p>{blog.author}</p>
-
-    </div>
+    <InfoBlog blog={blog} user={user}
+    blogStyle={blogStyle} handleLike={handleLike}
+    setShowInfo={setShowInfo} showInfo={showInfo}
+    handleDelete={handleDelete}/>
   )
+
 
 }
 

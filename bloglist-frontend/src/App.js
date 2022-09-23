@@ -14,7 +14,7 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
-  const [refreshKey, setRefreshKey] = useState(true) 
+  const [refreshKey, setRefreshKey] = useState(true)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -55,12 +55,12 @@ const App = () => {
       setUsername('')
       setPassword('')
       setErrorMessage(
-        `Logged in successful`
+        'Logged in successful'
       )
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
-      
+
     } catch (exception) {
       console.log('Wrong credentials', exception)
       setErrorMessage(
@@ -78,10 +78,10 @@ const App = () => {
     setUser(null)
   }
 
-  
+
 
   const handleCreateBlog = async (blogObject) => {
-    
+
     try {
       const newBlog = await blogService.create(blogObject)
       setBlogs(blogs.concat(newBlog))
@@ -126,13 +126,13 @@ const App = () => {
       <Togglable buttonLabel='create new' ref={blogFormRef}>
         <CreateBlog handleCreateBlog={handleCreateBlog} />
       </Togglable>
-      
+
 
       {blogs
         .sort((a, b) => b.likes - a.likes)
         .map(blog =>
-          <Blog key={blog.id} blog={blog} 
-          setErrorMessage={setErrorMessage} 
+          <Blog key={blog.id} blog={blog}
+          setErrorMessage={setErrorMessage}
           setRefreshKey={setRefreshKey}
           refreshKey={refreshKey}
           user={user} />

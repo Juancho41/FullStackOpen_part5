@@ -81,7 +81,7 @@ const Blog = ({ blog, setErrorMessage, setRefreshKey, refreshKey, user }) => {
     <InfoBlog blog={blog} user={user}
     blogStyle={blogStyle} handleLike={handleLike}
     setShowInfo={setShowInfo} showInfo={showInfo}
-    handleDelete={handleDelete}/>
+    handleDelete={handleDelete}  />
   )
 
 

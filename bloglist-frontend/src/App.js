@@ -92,6 +92,7 @@ const App = () => {
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
+      setRefreshKey(!refreshKey)
 
     } catch (exception) {
       setErrorMessage(

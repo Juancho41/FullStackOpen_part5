@@ -37,6 +37,7 @@ const CreateBlog = ({ handleCreateBlog }) => {
             <div>
                 title:
                 <input
+                    id='title'
                     type="text"
                     value={title}
                     name="Title"
@@ -47,6 +48,7 @@ const CreateBlog = ({ handleCreateBlog }) => {
                 author:
                 <input
                     type="text"
+                    id='author'
                     value={author}
                     name="Author"
                     onChange={handleAuthor}
@@ -56,6 +58,7 @@ const CreateBlog = ({ handleCreateBlog }) => {
                 url:
                 <input
                     type="text"
+                    id='url'
                     value={url}
                     name="Url"
                     onChange={handleUrl}
